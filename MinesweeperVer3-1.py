@@ -6,31 +6,31 @@ def difficulty_choise():
 
     choice = input('Choose difficulty (Easy/Medium/Hard): ').lower()
 
-    if choice == 'easy' or choice[0] == 'e':
+    if choice == 'easy' or choice.startswith('e'):
         size_of_field = 7
         repeater = 10
-        amount_of_mines = 14
-    elif choice == 'medium' or choice[0] == 'm':
+        amount_of_mines = 12
+    elif choice == 'medium' or choice.startswith('m'):
         size_of_field = 17
         repeater = 50
-        amount_of_mines = 30
-    elif choice == 'hard' or choice[0] == 'h':
+        amount_of_mines = 99
+    elif choice == 'hard' or choice.startswith('h'):
         size_of_field = 27
         repeater = 100
-        amount_of_mines = 99
+        amount_of_mines = 150
     else:
         print('Error! Please, try again.')
         difficulty_choise()
 
 
-# Global constants
+# Global constant
 ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 NUM_VARS = ['1 ', '2 ', '3 ', '4 ', '5 ', '6 ', '7 ', '8 ']
 
 # Introduction
 print('''==========================================
 | Welcome!                               |
-| This is Console Minesweeper on Python. |
+| This is Console Minesweeper in Python. |
 | Input coordinates in format "d2"       |
 | Or set a flag by typing "fd2"          |
 ==========================================
@@ -69,16 +69,16 @@ def create_mined_field():
 
 def create_show_field():
     field = [['• '] * size_of_field for _ in range(size_of_field)]
-    field[0][0] = '   '
+    field[0][0] = '  '
 
     for element in range(1, size_of_field):
         field[0][element] = ALPHABET[element - 1] + ' '
 
     for number in range(1, size_of_field):
         if number < 10:
-            field[number][0] = str(number) + '  '
-        else:
             field[number][0] = str(number) + ' '
+        else:
+            field[number][0] = str(number)
 
     field[size_of_field - 1] = [' ' * 8]
 
@@ -110,7 +110,9 @@ def check_neighbouring_flags(x_check, y_check):
 def check_neighbouring_numbers(x_num, y_num):
     for i in range(y_num - 1, y_num + 2):
         for j in range(x_num - 1, x_num + 2):
-            if mined_field[i][j] == 0 and showing_field[i][j] != 'F ':
+            if mined_field[i][j] == 1 and showing_field[i][j] != 'F ':
+                game_over()  # End of the game
+            if mined_field[i][j] == 0  and showing_field[i][j] != 'F ':
                 showing_field[i][j] = str(check_neighbouring_mines(j, i)) + ' '
 
 
@@ -123,13 +125,28 @@ def end_game_mines_show():
     return showing_field
 
 
+def clear_field():
+    if showing_field[y][x] == '0 ':
+        check_neighbouring_numbers(x, y)
+
+        for _ in range(repeater):
+            for i in range(1, size_of_field - 1):
+                for j in range(1, size_of_field - 1):
+                    if showing_field[i][j] == '0 ':
+                        check_neighbouring_numbers(j, i)
+
+
+def game_over():
+    for row in end_game_mines_show():
+        print(*row)
+
+    print(f'Game Over\n\nPress Enter to exit the game')
+    exit(input())  # Exit the game
+
+
 def mine_check():
     if mined_field[y][x] == 1:
-        for row in end_game_mines_show():
-            print(*row)
-
-        print(f'Game Over\n\nPress Enter to exit the game')
-        exit(input())  # Exit the game
+        game_over()  # End of the game
     else:
         showing_field[y][x] = str(check_neighbouring_mines(x, y)) + ' '
 
@@ -137,15 +154,7 @@ def mine_check():
             if str(check_neighbouring_flags(x, y)) + ' ' == showing_field[y][x]:
                 check_neighbouring_numbers(x, y)
 
-        if showing_field[y][x] == '0 ':
-            check_neighbouring_numbers(x, y)
-
-            for _ in range(repeater):
-                for i in range(1, size_of_field - 1):
-                    for j in range(1, size_of_field - 1):
-                        if showing_field[i][j] == '0 ':
-                            check_neighbouring_numbers(j, i)
-
+        clear_field()
         main()
 
 
@@ -166,6 +175,11 @@ def prevent_game_crashes(x_prevent, y_prevent):
     if (x_prevent.upper() in ALPHABET) and (0 <= y_prevent < size_of_field - 1):
         x_prevent = ALPHABET.index(x_prevent.upper())
         x_prevent += 1
+        if x_prevent > size_of_field:
+            error_warning()
+            main()
+        else:
+            pass
     else:
         error_warning()
         main()
@@ -251,4 +265,3 @@ beginning()
 
 if __name__ == '__main__':
     main()
- 
