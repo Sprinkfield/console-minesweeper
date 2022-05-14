@@ -23,7 +23,7 @@ def difficulty_choise():
         difficulty_choise()
 
 
-# Global constant
+# Global constants
 ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 NUM_VARS = ['1 |', '2 |', '3 |', '4 |', '5 |', '6 |', '7 |', '8 |']
 
