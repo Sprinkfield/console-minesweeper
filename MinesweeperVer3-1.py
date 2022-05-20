@@ -75,10 +75,7 @@ def create_show_field():
         field[0][element] = ALPHABET[element - 1] + ' '
 
     for number in range(1, size_of_field):
-        if number < 10:
-            field[number][0] = str(number) + ' '
-        else:
-            field[number][0] = str(number)
+        field[number][0] = str(number) + ' ' if number < 10 else str(number)
 
     field[size_of_field - 1] = [' ' * 8]
 
