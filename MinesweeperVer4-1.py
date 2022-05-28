@@ -256,9 +256,7 @@ def beginning():
     main()
 
 
-# First steps
-difficulty_choise()
-beginning()
-
 if __name__ == '__main__':
+    difficulty_choise()
+    beginning()
     main()
