@@ -163,7 +163,7 @@ def error_warning():
 
 
 def prevent_game_crashes(x_prevent, y_prevent):
-    if str.isnumeric(y_prevent) is True:
+    if str.isnumeric(y_prevent):
         y_prevent = int(y_prevent)
     else:
         error_warning()
