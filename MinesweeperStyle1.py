@@ -1,26 +1,25 @@
 from random import randint
 
 
-def difficulty_choise():
+def new_game_beginning():
     global size_of_field, repeater, amount_of_mines
+    # 1.size  2.repeater  3.mines
+    difficulty_dict = {
+        'e': (10, 8, 20),  # Easy
+        'm': (17, 20, 60), # Medium
+        'h': (27, 50, 150) # Hard 
+    }
 
-    choice = input('Choose difficulty (Easy/Medium/Hard): ').lower()
+    choice = input('\nChoose difficulty (Easy/Medium/Hard): ').lower()[0]
+    print()
 
-    if choice == 'easy' or choice.startswith('e'):
-        size_of_field = 10
-        repeater = 8
-        amount_of_mines = 20
-    elif choice == 'medium' or choice.startswith('m'):
-        size_of_field = 17
-        repeater = 20
-        amount_of_mines = 60
-    elif choice == 'hard' or choice.startswith('h'):
-        size_of_field = 27
-        repeater = 50
-        amount_of_mines = 150
+    if choice in difficulty_dict:
+        size_of_field, repeater, amount_of_mines = difficulty_dict[choice]
     else:
         print('Error! Please, try again.')
-        difficulty_choise()
+        new_game_beginning()
+
+    beginning()
 
 
 # Global constants
@@ -33,8 +32,7 @@ print('''==========================================
 | This is Console Minesweeper in Python. |
 | Input coordinates in format "d2"       |
 | Or set a flag by typing "fd2"          |
-==========================================
-''')
+==========================================''')
 
 
 def create_mined_field():
@@ -85,8 +83,10 @@ def game_over():
     # Output of the playing field with mines
     [print(*row) for row in end_game_mines_show()]
 
-    print('Game Over\n\nPress Enter to exit the game')
-    exit(input())
+    if input('Game Over\n\nDo you want to start a new game? (y/n): ').lower().startswith('y'):
+        new_game_beginning()
+    else:
+        exit(input('\nPress Enter to exit.'))
 
 
 def error_warning():
@@ -240,8 +240,7 @@ def beginning():
 
 
 # First steps
-difficulty_choise()
-beginning()
+new_game_beginning()
 
 if __name__ == '__main__':
     main()
