@@ -7,16 +7,16 @@ def difficulty_choise():
     choice = input('Choose difficulty (Easy/Medium/Hard): ').lower()
 
     if choice == 'easy' or choice.startswith('e'):
-        size_of_field = 7
-        repeater = 10
-        amount_of_mines = 12
+        size_of_field = 10
+        repeater = 8
+        amount_of_mines = 20
     elif choice == 'medium' or choice.startswith('m'):
         size_of_field = 17
-        repeater = 50
-        amount_of_mines = 99
+        repeater = 20
+        amount_of_mines = 60
     elif choice == 'hard' or choice.startswith('h'):
         size_of_field = 27
-        repeater = 100
+        repeater = 50
         amount_of_mines = 150
     else:
         print('Error! Please, try again.')
@@ -24,8 +24,8 @@ def difficulty_choise():
 
 
 # Global constants
-ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-NUM_VARS = ('1 ', '2 ', '3 ', '4 ', '5 ', '6 ', '7 ', '8 ')
+ALPHABET = '.ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+NUM_VARS = ('1 |', '2 |', '3 |', '4 |', '5 |', '6 |', '7 |', '8 |')
 
 # Introduction
 print('''==========================================
@@ -38,26 +38,24 @@ print('''==========================================
 
 
 def create_mined_field():
-    def add_mine():
-        mines_coords = []
-
-        for _ in range(amount_of_mines):
-            def loop_placement():
-
-                mine_x = randint(1, size_of_field - 1)
-                mine_y = randint(1, size_of_field - 1)
-
-                if [mine_x, mine_y] not in mines_coords:
-                    mined_field[mine_x][mine_y] = 1
-                    mines_coords.append([mine_x, mine_y])
-                else:
-                    loop_placement()
-
-            loop_placement()
-
     mined_field = [[0] * (size_of_field + 1) for _ in range(size_of_field + 1)]
 
-    add_mine()
+    mines_coords = []
+
+    # Placement of mines
+    for _ in range(amount_of_mines):
+        def loop_placement():
+
+            mine_x = randint(1, size_of_field - 1)
+            mine_y = randint(1, size_of_field - 1)
+
+            if [mine_x, mine_y] not in mines_coords:
+                mined_field[mine_x][mine_y] = 1
+                mines_coords.append([mine_x, mine_y])
+            else:
+                loop_placement()
+
+        loop_placement()
 
     for i in range(size_of_field):
         mined_field[0][i] = 2
@@ -73,14 +71,29 @@ def create_showing_field():
     field[0][0] = '  |'
 
     for element in range(1, size_of_field):
-        field[0][element] = ALPHABET[element - 1] + ' |'
+        field[0][element] = ALPHABET[element] + ' |'
 
     for number in range(1, size_of_field):
         field[number][0] = str(number) + ' |' if number < 10 else str(number) + '|'
 
-    field[size_of_field - 1] = [' ' * 8]
+    field[size_of_field - 1] = [' ' * 8]  # Empty space under the field
 
     return field
+
+
+def game_over():
+    # Output of the playing field with mines
+    [print(*row) for row in end_game_mines_show()]
+
+    print('Game Over\n\nPress Enter to exit the game')
+    exit(input())
+
+
+def error_warning():
+    print('''==========================================
+| Error! (Wrong Input) Please try again. |
+==========================================
+''')
 
 
 def check_neighbouring_mines(x_check, y_check):
@@ -109,7 +122,7 @@ def check_neighbouring_numbers(x_num, y_num):
     for i in range(y_num - 1, y_num + 2):
         for j in range(x_num - 1, x_num + 2):
             if mined_field[i][j] == 1 and showing_field[i][j] != 'F |':
-                game_over()  # End of the game
+                game_over()
             if mined_field[i][j] == 0  and showing_field[i][j] != 'F |':
                 showing_field[i][j] = str(check_neighbouring_mines(j, i)) + ' |'
 
@@ -123,105 +136,81 @@ def end_game_mines_show():
     return showing_field
 
 
-def game_over():
-    # Output of the playing field with mines
-    for row in end_game_mines_show():
-        print(*row)
-
-    print('Game Over\n\nPress Enter to exit the game')
-    exit(input())  # Exit the game
-
-
 def clear_field():
-    if showing_field[y][x] == '0 |':
-        check_neighbouring_numbers(x, y)
-
-        for _ in range(repeater):
-            for i in range(1, size_of_field - 1):
-                for j in range(1, size_of_field - 1):
-                    if showing_field[i][j] == '0 |':
-                        check_neighbouring_numbers(j, i)
+    for _ in range(repeater):
+        for i in range(1, size_of_field - 1):
+            for j in range(1, size_of_field - 1):
+                if showing_field[i][j] == '0 |':
+                    check_neighbouring_numbers(j, i)
 
 
 def mine_check():
     if mined_field[y][x] == 1:
-        game_over()  # End of the game
+        game_over()
     else:
         showing_field[y][x] = str(check_neighbouring_mines(x, y)) + ' |'
 
         if showing_field[y][x] in NUM_VARS:
             if str(check_neighbouring_flags(x, y)) + ' |' == showing_field[y][x]:
                 check_neighbouring_numbers(x, y)
+                clear_field()
 
-        clear_field()
+        if showing_field[y][x] == '0 |':
+            check_neighbouring_numbers(x, y)
+            clear_field()
+
         main()
-
-
-def error_warning():
-        print('''==========================================
-| Error! (Wrong Input) Please try again. |
-==========================================
-''')
 
 
 def prevent_game_crashes(x_prevent, y_prevent):
-    # Changing y string type to integer
-    if str.isnumeric(y_prevent):
-        y_prevent = int(y_prevent)
-    else:
-        error_warning()
-        main()
-
-    # Changing x string type to integer
-    if (x_prevent.upper() in ALPHABET) and (0 <= y_prevent < size_of_field - 1):
+    try:
         x_prevent = ALPHABET.index(x_prevent.upper())
-        x_prevent += 1
+        y_prevent = int(y_prevent)
 
-        if x_prevent > size_of_field - 1:
+        if x_prevent < size_of_field and 0 < y_prevent < size_of_field - 1:
+            return x_prevent, y_prevent
+        else:
             error_warning()
             main()
-    else:
+    except:
         error_warning()
         main()
-
-    return x_prevent, y_prevent
 
 
 def main():
-    # Output of the playing field
-    for raw in showing_field:
-        print(*raw)
-
     global x, y
 
-    coords_input = input('Input Coordinates: ').lower()
-    print()
+    [print(*row) for row in showing_field]  # Output of the playing field
 
-    if coords_input != '' and coords_input != 'f':
-        if coords_input[0] == 'f' and (len(coords_input) >= 3 and str.isnumeric(coords_input[1]) is False):
-            # Flag placement
-            # Changing x and y string type to integer
-            x = coords_input[1]
-            y = coords_input[2:]
-            x, y = prevent_game_crashes(x, y)
+    try:
+        coords_input = input('Input Coordinates: ').lower()
+        print()
+    except:
+        exit()
 
-            # Prevent flag from being placed on the number
-            if showing_field[y][x] == '• |':
-                showing_field[y][x] = 'F |'
-
-            main()
-        else:
-            # Changing x and y string type to integer
-            x = coords_input[0]
-            y = coords_input[1:]
-            x, y = prevent_game_crashes(x, y)
-    else:
+    if coords_input == '' or coords_input == 'f':
         error_warning()
         main()
+    
+    if coords_input[0] == 'f' and (len(coords_input) >= 3 and str.isnumeric(coords_input[1]) is False):
+        # Flag placement
+        # Changing x and y string type to integer
+        x = coords_input[1]
+        y = coords_input[2:]
+        x, y = prevent_game_crashes(x, y)
+
+        # Prevent flag from being placed on the number
+        if showing_field[y][x] == '• |':
+            showing_field[y][x] = 'F |'
+
+        main()
+    else:
+        # Changing x and y string type to integer
+        x = coords_input[0]
+        y = coords_input[1:]
+        x, y = prevent_game_crashes(x, y)
 
     mine_check()
-
-    return x, y
 
 
 def beginning():
@@ -229,17 +218,14 @@ def beginning():
 
     showing_field = create_showing_field()
 
-    for raw in showing_field:
-        print(*raw)
+    [print(*row) for row in showing_field]  # Output of the playing field
 
     user_input = input('Input Coordinates: ').lower()
     print()
 
     x = user_input[0]
     y = user_input[1:]
-
     x, y = prevent_game_crashes(x, y)
-
     showing_field[y][x] = '0 |'
 
     if x < size_of_field:
@@ -249,14 +235,11 @@ def beginning():
             if mined_field[y][x] == 0 and check_neighbouring_mines(x, y) == 0:
                 break
 
-    for _ in range(repeater):
-        for i in range(1, size_of_field - 1):
-            for j in range(1, size_of_field):
-                if showing_field[i][j] == '0 |':
-                    check_neighbouring_numbers(j, i)
+    clear_field()
     main()
 
 
+# First steps
 difficulty_choise()
 beginning()
 
