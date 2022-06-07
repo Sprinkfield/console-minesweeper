@@ -19,7 +19,7 @@ def new_game_beginning():
         print('Error! Please, try again.')
         new_game_beginning()
 
-    beginning()
+    new_game_setup()
 
 
 # Global constants
@@ -213,7 +213,7 @@ def main():
     mine_check()
 
 
-def beginning():
+def new_game_setup():
     global mined_field, showing_field
 
     showing_field = create_showing_field()
