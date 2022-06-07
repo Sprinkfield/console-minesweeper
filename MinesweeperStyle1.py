@@ -41,19 +41,17 @@ def create_mined_field():
     mines_coords = []
 
     # Placement of mines
-    for _ in range(amount_of_mines):
-        def loop_placement():
+    mines_counter = amount_of_mines
 
+    for _ in range(amount_of_mines):
+        while mines_counter:
             mine_x = randint(1, size_of_field - 1)
             mine_y = randint(1, size_of_field - 1)
 
             if [mine_x, mine_y] not in mines_coords:
                 mined_field[mine_x][mine_y] = 1
                 mines_coords.append([mine_x, mine_y])
-            else:
-                loop_placement()
-
-        loop_placement()
+                mines_counter -= 1
 
     for i in range(size_of_field):
         mined_field[0][i] = 2
