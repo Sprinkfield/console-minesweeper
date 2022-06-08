@@ -79,7 +79,7 @@ def create_showing_field():
 def game_over():
     # Output of the playing field with mines
     end_game_mines_show()
-    [print(*row) for row in end_game_mines_show()]
+    [print(*row) for row in showing_field]
 
     if input('Game Over\n\nDo you want to start a new game? (y/n): ').lower().startswith('y'):
         new_game_beginning()
