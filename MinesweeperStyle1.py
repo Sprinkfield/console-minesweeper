@@ -10,10 +10,10 @@ def new_game_beginning():
         'h': (27, 50, 150) # Hard 
     }
 
-    choice = input('\nChoose difficulty (Easy/Medium/Hard): ').lower()[0]
+    choice = input('\nChoose difficulty (Easy/Medium/Hard): ').lower()
     print()
 
-    if choice in difficulty_dict:
+    if choice[0] in difficulty_dict:
         size_of_field, repeater, amount_of_mines = difficulty_dict[choice]
     else:
         print('Error! Please, try again.')
@@ -129,8 +129,6 @@ def end_game_mines_show():
         for j in range(1, size_of_field):
             if mined_field[i][j] == 1:
                 showing_field[i][j] = '# '
-
-    return showing_field
 
 
 def clear_field():
