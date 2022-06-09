@@ -3,7 +3,7 @@ from random import randint
 
 # Global constants
 ALPHABET = '.ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-NUM_VARS = ('1 ', '2 ', '3 ', '4 ', '5 ', '6 ', '7 ', '8 ')
+NUM_VARS = ('0 ', '1 ', '2 ', '3 ', '4 ', '5 ', '6 ', '7 ', '8 ')
 
 # Alerts
 print('''==========================================
@@ -104,10 +104,7 @@ def mine_check():
     else:
         showing_field[y][x] = str(check_neighbouring_mines(x, y)) + ' '
 
-        if showing_field[y][x] == '0 ':
-            check_neighbouring_numbers(x, y)
-            clear_field()
-        elif (showing_field[y][x] in NUM_VARS) and (str(check_neighbouring_flags(x, y)) + ' ' == showing_field[y][x]):
+        if (showing_field[y][x] in NUM_VARS) and (str(check_neighbouring_flags(x, y)) + ' ' == showing_field[y][x]):
             check_neighbouring_numbers(x, y)
             clear_field()
 
