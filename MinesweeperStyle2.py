@@ -135,17 +135,16 @@ def clear_field():
                 if showing_field[i][j] == '0 |':
                     check_neighbouring_numbers(j, i)
 
-
+                    
 def mine_check():
     if mined_field[y][x] == 1:
         game_over()
     else:
         showing_field[y][x] = str(check_neighbouring_mines(x, y)) + ' |'
 
-        if showing_field[y][x] in NUM_VARS:
-            if str(check_neighbouring_flags(x, y)) + ' |' == showing_field[y][x]:
-                check_neighbouring_numbers(x, y)
-                clear_field()
+        if (showing_field[y][x] in NUM_VARS) and (str(check_neighbouring_flags(x, y)) + ' |' == showing_field[y][x]):
+            check_neighbouring_numbers(x, y)
+            clear_field()
 
         if showing_field[y][x] == '0 |':
             check_neighbouring_numbers(x, y)
