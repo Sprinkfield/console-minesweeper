@@ -37,7 +37,6 @@ print('''==========================================
 
 def create_mined_field():
     mined_field = [[0] * (size_of_field + 1) for _ in range(size_of_field + 1)]
-
     mines_coords = []
 
     # Placement of mines
@@ -65,11 +64,9 @@ def create_showing_field():
     field = [['• |'] * size_of_field for _ in range(size_of_field)]
     field[0][0] = '  |'
 
-    for element in range(1, size_of_field):
-        field[0][element] = ALPHABET[element] + ' |'
-
-    for number in range(1, size_of_field):
-        field[number][0] = str(number) + ' |' if number < 10 else str(number) + '|'
+    for num in range(1, size_of_field):
+        field[0][num] = ALPHABET[num] + ' |'
+        field[num][0] = str(num) + ' |' if num < 10 else str(num) + '|'
 
     field[size_of_field - 1] = [' ' * 8]  # Empty space under the field
 
@@ -78,8 +75,7 @@ def create_showing_field():
 
 def game_over():
     # Output of the playing field with mines
-    end_game_mines_show()
-    [print(*row) for row in showing_field]
+    [print(*row) for row in end_game_mines_show()]
 
     if input('Game Over\n\nDo you want to start a new game? (y/n): ').lower().startswith('y'):
         new_game_beginning()
