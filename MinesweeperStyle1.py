@@ -1,6 +1,19 @@
 from random import randint
 
 
+# Global constants
+ALPHABET = '.ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+NUM_VARS = ('1 ', '2 ', '3 ', '4 ', '5 ', '6 ', '7 ', '8 ')
+
+# Introduction
+print('''==========================================
+| Welcome!                               |
+| This is Console Minesweeper in Python. |
+| Input coordinates in format "d2"       |
+| Or set a flag by typing "fd2"          |
+==========================================''')
+
+
 def new_game_beginning():
     global size_of_field, repeater, amount_of_mines
     # 1.size  2.repeater  3.mines
@@ -22,22 +35,8 @@ def new_game_beginning():
     new_game_setup()
 
 
-# Global constants
-ALPHABET = '.ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-NUM_VARS = ('1 ', '2 ', '3 ', '4 ', '5 ', '6 ', '7 ', '8 ')
-
-# Introduction
-print('''==========================================
-| Welcome!                               |
-| This is Console Minesweeper in Python. |
-| Input coordinates in format "d2"       |
-| Or set a flag by typing "fd2"          |
-==========================================''')
-
-
 def create_mined_field():
     mined_field = [[0] * (size_of_field + 1) for _ in range(size_of_field + 1)]
-
     mines_coords = []
 
     # Placement of mines
@@ -65,11 +64,9 @@ def create_showing_field():
     field = [['• '] * size_of_field for _ in range(size_of_field)]
     field[0][0] = '  '
 
-    for element in range(1, size_of_field):
-        field[0][element] = ALPHABET[element] + ' '
-
-    for number in range(1, size_of_field):
-        field[number][0] = str(number) + ' ' if number < 10 else str(number)
+    for num in range(1, size_of_field):
+        field[0][num] = ALPHABET[num] + ' '
+        field[num][0] = str(num) + ' ' if num < 10 else str(num)
 
     field[size_of_field - 1] = [' ' * 8]  # Empty space under the field
 
@@ -213,7 +210,6 @@ def new_game_setup():
     global mined_field, showing_field
 
     showing_field = create_showing_field()
-
     [print(*row) for row in showing_field]  # Output of the playing field
 
     user_input = input('Input Coordinates: ').lower()
