@@ -29,11 +29,11 @@ def main():
         'h': (27, 50, 150) # Hard 
     }
 
-    choice = input('\nChoose difficulty (Easy/Medium/Hard): ').lower()[0]
+    choice = input('\nChoose difficulty (Easy/Medium/Hard): ').lower()
     print()
 
-    if choice in difficulty_dict:
-        size_of_field, repeater, amount_of_mines = difficulty_dict[choice]
+    if choice and choice[0] in difficulty_dict:
+        size_of_field, repeater, amount_of_mines = difficulty_dict[choice[0]]
     else:
         print('Error! Please, try again.')
         main()
