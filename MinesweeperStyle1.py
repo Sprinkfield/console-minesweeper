@@ -55,12 +55,11 @@ def new_game_setup():
     x, y = prevent_game_crashes(x, y)
     showing_field[y][x] = '0 '
 
-    if x < size_of_field:
-        while True:
-            mined_field = create_mined_field()
+    while True:
+        mined_field = create_mined_field()
 
-            if mined_field[y][x] == 0 and check_neighbouring_mines(x, y) == 0:
-                break
+        if mined_field[y][x] == 0 and check_neighbouring_mines(x, y) == 0:
+            break
 
     clear_field()
     run_game()
@@ -153,7 +152,7 @@ def check_neighbouring_numbers(x_num, y_num):
         for j in range(x_num - 1, x_num + 2):
             if mined_field[i][j] == 1 and showing_field[i][j] != 'F ':
                 game_over()
-            if mined_field[i][j] == 0  and showing_field[i][j] != 'F ':
+            if mined_field[i][j] == 0 and showing_field[i][j] != 'F ':
                 showing_field[i][j] = str(check_neighbouring_mines(j, i)) + ' '
 
 
