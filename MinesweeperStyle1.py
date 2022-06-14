@@ -164,16 +164,13 @@ def clear_field():
                     check_neighbouring_numbers(j, i)
 
 
-def end_game_mines_show():
+def game_over():
+    # Output of the playing field with mines
     for i in range(1, size_of_field):
         for j in range(1, size_of_field):
             if mined_field[i][j] == 1:
                 showing_field[i][j] = '# '
-
-
-def game_over():
-    # Output of the playing field with mines
-    end_game_mines_show()
+                
     [print(*row) for row in showing_field]
 
     if input('Game Over\n\nDo you want to start a new game? (y/n): ').lower().startswith('y'):
