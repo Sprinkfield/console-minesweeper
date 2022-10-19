@@ -24,9 +24,9 @@ def main():
     global size_of_field, repeater, amount_of_mines
     # 1.size  2.repeater  3.mines
     difficulty_dict = {
-        'e': (10, 8, 20),  # Easy
-        'm': (17, 20, 80), # Medium
-        'h': (27, 50, 150) # Hard 
+        'e': (10, 8, 15),  # Easy
+        'm': (17, 20, 60), # Medium
+        'h': (27, 50, 140) # Hard 
     }
 
     choice = input('\nChoose difficulty (Easy/Medium/Hard): ').lower()
@@ -36,9 +36,9 @@ def main():
         size_of_field, repeater, amount_of_mines = difficulty_dict[choice[0]]
     else:
         print('Error! Please, try again.')
-        main()
+        return main()
 
-    new_game_setup()
+    return new_game_setup()
 
 
 def new_game_setup():
@@ -62,7 +62,7 @@ def new_game_setup():
             break
 
     clear_field()
-    run_game()
+    return run_game()
 
 
 def run_game():
@@ -74,7 +74,7 @@ def run_game():
 
     if coords_input == '' or coords_input == 'f':
         error_warning()
-        run_game()
+        return run_game()
     
     if coords_input[0] == 'f' and (len(coords_input) >= 3 and str.isnumeric(coords_input[1]) is False):
         # Flag placement
@@ -87,19 +87,19 @@ def run_game():
         if showing_field[y][x] == '• ':
             showing_field[y][x] = 'F '
 
-        run_game()
+        return run_game()
     else:
         # Changing x and y string type to integer
         x = coords_input[0]
         y = coords_input[1:]
         x, y = prevent_game_crashes(x, y)
 
-    mine_check()
+    return mine_check()
 
 
 def mine_check():
     if mined_field[y][x] == 1:
-        game_over()
+        return game_over()
     else:
         showing_field[y][x] = str(check_neighbouring_mines(x, y)) + ' '
 
@@ -107,7 +107,7 @@ def mine_check():
             check_neighbouring_numbers(x, y)
             clear_field()
 
-        run_game()
+        return run_game()
 
 
 def prevent_game_crashes(x_prevent, y_prevent):
@@ -119,10 +119,10 @@ def prevent_game_crashes(x_prevent, y_prevent):
             return x_prevent, y_prevent
         else:
             error_warning()
-            run_game()
+            return run_game()
     except:
         error_warning()
-        run_game()
+        return run_game()
 
 
 def check_neighbouring_mines(x_check, y_check):
@@ -151,7 +151,7 @@ def check_neighbouring_numbers(x_num, y_num):
     for i in range(y_num - 1, y_num + 2):
         for j in range(x_num - 1, x_num + 2):
             if mined_field[i][j] == 1 and showing_field[i][j] != 'F ':
-                game_over()
+                return game_over()
             if mined_field[i][j] == 0 and showing_field[i][j] != 'F ':
                 showing_field[i][j] = str(check_neighbouring_mines(j, i)) + ' '
 
@@ -174,7 +174,7 @@ def game_over():
     [print(*row) for row in showing_field]
 
     if input('Game Over\n\nDo you want to start a new game? (y/n): ').lower().startswith('y'):
-        main()
+        return main()
     else:
         exit(input('\nPress Enter to exit.'))
 
